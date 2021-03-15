@@ -24,11 +24,21 @@ public float jumpMultiplier;
 //boolean to check if player is on floor/platform or not
 bool onFloor = true;
 
-public GameObject orangegate;
-public GameObject greengate;
-public GameObject redgate;
-public GameObject reddoor1;
-public GameObject reddoor2;
+public GameObject gate1;
+public GameObject gate2;
+public GameObject gate3;
+public GameObject minigate1;
+public GameObject minigate2;
+
+//private bool reachedPos = true;
+//private bool stopMovement = false;
+//private Vector3 dir; 
+private Vector3 nextPos; 
+public float sightDist; 
+public LayerMask SignLayer; 
+
+public GameManager gameManager; 
+
 
 
 
@@ -49,7 +59,34 @@ public float power;
     void Update()
     {
         //returns true once
-        
+
+        //struct; creates a ray in particular direction
+        //created a layer for the sign object
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.right), sightDist, SignLayer);
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.right), Color.green);
+        //if we hit something
+        if (hit.collider != null) {
+            
+            Debug.Log("hit sign");
+
+            gameManager.ShowPopText("In a dream I see a world reflected, as if cast on water's surface. Where up is down, and down is up: heaven at the ground and hell in the sky, all else ripples between.");
+            
+
+
+
+
+
+            //if (hit.collider.tag == "Sign") {
+          
+                
+                
+           // }
+
+        }
+        else {
+
+             
+        }
     }
 
     void FixedUpdate() {
@@ -70,12 +107,12 @@ public float power;
 
         if (Input.GetKey(KeyCode.D)) {
 
-            MoveDirection = 1;
+            MoveDirection = -1;
         }
 
         else if (Input.GetKey(KeyCode.A)) {
 
-            MoveDirection = -1;
+            MoveDirection = 1;
         }
 
         else {
@@ -83,13 +120,13 @@ public float power;
             MoveDirection = 0;
         }
 
-        if (Input.GetKey(KeyCode.W) && onFloor) {
+        if (Input.GetKey(KeyCode.S) && onFloor) {
 
             //we want to keep the x velocity as is
             //but change y value thru jump height
             myBody.velocity = new Vector3(myBody.velocity.x, jumpHeight);
             //if we are not pressing W or on the floor 
-        } else if(!Input.GetKey(KeyCode.W) && myBody.velocity.y > 0) {
+        } else if(!Input.GetKey(KeyCode.S) && myBody.velocity.y > 0) {
             //little boost, then slow down 
             myBody.velocity += Vector2.up * Physics.gravity.y * (jumpMultiplier - 1f) * Time.deltaTime; 
         }
@@ -125,33 +162,34 @@ public float power;
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.gameObject.name == "orangemushroom") {
+        if (other.gameObject.name == "firstkey") {
             //myRenderer.color = gateColour; 
-            Debug.Log("picked up orange mushroom");
+            Debug.Log("picked up first level key");
             Destroy(other.gameObject);
-            Destroy(orangegate);
+            Destroy(gate1);
         }
 
-        if (other.gameObject.name == "redmushroom") {
+        if (other.gameObject.name == "secondkey") {
             //myRenderer.color = gateColour; 
-            Debug.Log("picked up red mushroom");
+            Debug.Log("picked up second level key");
             Destroy(other.gameObject);
-            Destroy(reddoor2);
-            Destroy(redgate);
+            Destroy(gate2);
+            
         }
 
-         if (other.gameObject.name == "greenmushroom") {
+         if (other.gameObject.name == "bluekey") {
             //myRenderer.color = gateColour; 
-            Debug.Log("picked up green mushroom");
+            Debug.Log("picked up key for mini gate");
             Destroy(other.gameObject);
-            Destroy(greengate);
+            Destroy(minigate1);
         }
 
-        if (other.gameObject.name == "redkey") {
+        if (other.gameObject.name == "thirdkey") {
             //myRenderer.color = gateColour; 
-            Debug.Log("picked up green mushroom");
+            Debug.Log("picked up third level key");
             Destroy(other.gameObject);
-            Destroy(reddoor1);
+            Destroy(minigate2);
+            Destroy(gate3);
         }
 
         
